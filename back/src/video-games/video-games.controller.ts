@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Body, UsePipes } from '@nestjs/common';
 import { VideoGamesService } from './video-games.service';
-import { VideoGame } from './video-game.interface';
 import { CreateDTO } from './dto/create.dto';
 import { ValidationPipe } from '../validation.pipe';
+import { VideoGame } from './video-game.entity';
 
 @Controller('video-games')
 export class VideoGamesController {
@@ -12,7 +12,9 @@ export class VideoGamesController {
     @Post()
     @UsePipes(ValidationPipe)
     async create(@Body() createVGDTO: CreateDTO) {
-        this.vgService.create(createVGDTO);
+        const newVG: VideoGame = new VideoGame();
+        newVG.name = createVGDTO.name;
+        await this.vgService.create(newVG);
     }
 
     @Get()

@@ -1,15 +1,17 @@
 import { Injectable } from '@nestjs/common';
-import { VideoGame } from './video-game.interface';
+import { InjectRepository } from '@nestjs/typeorm';
+import { VideoGame } from './video-game.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class VideoGamesService {
-    private storage: VideoGame[] = [];
+    constructor(@InjectRepository(VideoGame) private readonly vgRepository: Repository<VideoGame>) { }
 
     create(v: VideoGame) {
-        this.storage.push(v);
+        return this.vgRepository.save(v);
     }
 
-    findAll(): VideoGame[] {
-        return this.storage;
+    findAll(): Promise<VideoGame[]> {
+        return this.vgRepository.find();
     }
 }

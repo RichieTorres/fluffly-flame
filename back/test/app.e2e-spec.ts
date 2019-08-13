@@ -4,13 +4,18 @@ import { AppModule } from './../src/app.module';
 
 let app;
 
-beforeEach(async () => {
+beforeAll(async () => {
   const moduleFixture: TestingModule = await Test.createTestingModule({
     imports: [AppModule],
-  }).compile();
+  })
+    .compile();
 
   app = moduleFixture.createNestApplication();
   await app.init();
+});
+
+afterAll(async () => {
+  await app.close();
 });
 
 describe('AppController (e2e)', () => {
@@ -20,10 +25,10 @@ describe('AppController (e2e)', () => {
       .expect(200)
       .expect('Hello World!');
   });
-
 });
 
 describe('Videogames endpoints', () => {
+
   it('/video-games (GET)', () => {
     return request(app.getHttpServer())
       .get('/video-games')
@@ -50,7 +55,7 @@ describe('Videogames endpoints', () => {
       await request(app.getHttpServer())
         .get('/video-games')
         .expect(200)
-        .expect(JSON.stringify([newGame]));
+        .expect(JSON.stringify([{ id: 1, name: newGame.name }]));
     });
 
   });

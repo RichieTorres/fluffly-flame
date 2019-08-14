@@ -11,6 +11,7 @@ beforeAll(async () => {
     .compile();
 
   app = moduleFixture.createNestApplication();
+  app.enableCors();
   await app.init();
 });
 
@@ -24,6 +25,12 @@ describe('AppController (e2e)', () => {
       .get('/')
       .expect(200)
       .expect('Hello World!');
+  });
+
+  it('should have CORS enabled', () => {
+    return request(app.getHttpServer())
+      .get('/')
+      .expect('Access-Control-Allow-Origin', '*');
   });
 });
 
